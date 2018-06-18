@@ -127,7 +127,7 @@ main()
 	_RegSetProfileNumber("Gas Bench", "Last Peak Height", 0);
 	
 	call UploadSamplerMethod();
-  call InitScript();
+	call InitScript();
 	call PeakCenter();
 	
 	call GasBenchNextSample();
@@ -141,6 +141,9 @@ main()
 	
 	call StartChromatogram();
 	
+
+	// Record heights of reference pulses
+	// EDIT DELAYS HERE to match the reference pulses in your method.
 	_Delay(50000, 1);
 	number Ref1Height = _RegGetProfileNumber("Gas Bench", "Last Peak Height", -1);
 	_Delay(30000, 1);
@@ -149,11 +152,17 @@ main()
 	number Ref3Height = _RegGetProfileNumber("Gas Bench", "Last Peak Height", -1);
 	
 	_UserInfo("ref peaks %f, %f, %f", 0, 0, Ref1Height, Ref2Height, Ref3Height);
+
 	
-	_Delay(95000,1); // adjust this value as needed!
-		
+	// wait for first sample peak
+	// EDIT DELAY HERE to align with your method
+	_Delay(95000,1);
+
+
+	// dilute all air peaks, but respect autodilute for CO2 peaks
+	// EDIT DELAYS HERE to match method timing
 	number i;
-	for(i=1;i<=5;i++;){ // dilute all air peaks, but respect autodilute for CO2 peaks
+	for(i=1;i<=5;i++;){
 		_Set("Gas Bench/Split", OUT);
 		_Delay(35000,1);
 		isDiluting = _RegGetProfileNumber("Gas Bench", "Is Diluting", -1);
@@ -163,7 +172,11 @@ main()
 		_Delay(55000,1);
 	}
 	
-	_Delay(30000,1);//Make sure last peak gets recorded, else we might match against an air peak.
+
+	// wait after last peak to make sure it gets recorded,
+	// else we might match height against an air peak.
+	// EDIT DELAY HERE if needed, then extend your method to match
+	_Delay(30000,1);
 	peakFromReg = _RegGetProfileNumber("Gas Bench", "Last Peak Height", -1);
 	_UserInfo("Last peak height: %f", 0, 0, peakFromReg);
 	
@@ -171,6 +184,11 @@ main()
 		_UserInfo("Autodiluted", 0,0);
 	}
 	
+
+	// Look up reference pulse heights,
+	// use them to decide which ports to open for post-sample reference pulses
+	// EDIT DELAYS HERE if needed to optimize pulse duration/separation,
+	// then extend your method to match
 	number iPeak;
 	for(iPeak=1; iPeak <=3; iPeak++;){
 		call openRefsByHeight(peakFromReg, Ref1Height, Ref2Height, Ref3Height);
@@ -178,7 +196,7 @@ main()
 		call setRefs(0,0,0);
 		_Delay(20000);
 	}
-	
+
 	_Set("Gas Bench/Split", OUT);
 	call setRefs(0,0,0);
 	
