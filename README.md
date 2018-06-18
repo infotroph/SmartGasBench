@@ -35,19 +35,19 @@ This script setup is intended to solve several problems commonly encountered in 
 
 The setup consists of an Isodat method coupled to two ISL scripts: 
 
-* The method `GB smart dilute.met` triggers injection of pre-sample reference pulses and of sample peaks, but not of any open split motions or post-sample reference pulses. It uses `aquisition smart dilution 50C.isl` as its aquisition script. Depending on your system setup, you may want to treat this as an example to build your own method rather than using it directly.
-* The aquisition script `aquisition smart dilution 50C.isl` triggers injection of the end-of-run reference peaks and timed dilution of the air peaks, and in turn calls `AutoDilutionByRegistry.isl` to track peak heights and determine whether to dilute the next sample peak.
-* `AutoDilutionByRegistry.isl` is called once for each peak, to record the peak height in the Windows registry and decide whether autodilution is needed. If dilution is needed, it cues the aquisition script by setting a registry flag.
+* The method `GB smart dilute.met` triggers injection of pre-sample reference pulses and of sample peaks, but not of any open split motions or post-sample reference pulses. It uses `acquisition smart dilution 50C.isl` as its acquisition script. Depending on your system setup, you may want to treat this as an example to build your own method rather than using it directly.
+* The acquisition script `acquisition smart dilution 50C.isl` triggers injection of the end-of-run reference peaks and timed dilution of the air peaks, and in turn calls `AutoDilutionByRegistry.isl` to track peak heights and determine whether to dilute the next sample peak.
+* `AutoDilutionByRegistry.isl` is called once for each peak, to record the peak height in the Windows registry and decide whether autodilution is needed. If dilution is needed, it cues the acquisition script by setting a registry flag.
 
 
-Note that this means you have to set timings in both the method *and* the aquisition script:
+Note that this means you have to set timings in both the method *and* the acquisition script:
 
-* Beginning-of-run reference peaks: Set in the method, using whatever timings and reference ports make sense for your application. Then match timings by adjusting delays in the aquisition script so that it finds and records one reference peak from each of ports 1, 2, and 3.
-* Delay before sample injection: Set in the method, adjust delay in the aquisition script to match.
+* Beginning-of-run reference peaks: Set in the method, using whatever timings and reference ports make sense for your application. Then match timings by adjusting delays in the acquisition script so that it finds and records one reference peak from each of ports 1, 2, and 3.
+* Delay before sample injection: Set in the method, adjust delay in the acquisition script to match.
 * Threshold for autodilution: Set in the method, no script edits needed.
-* Delay between sample injections: Set in the method to obtain good separation between air peaks and sample peaks, then adjust delays before and after air peak dilution in the aquisition script to match.
-* Delay after sample injections: Set FIRST in aquisition script, then set method to match.
-* Number and timing of post-sample reference pulses: Set in aquisition script, then set method to match. The method should NOT cue any post-sample reference pulses, but rather simply wait long enough for the aquisition script to provide them.
+* Delay between sample injections: Set in the method to obtain good separation between air peaks and sample peaks, then adjust delays before and after air peak dilution in the acquisition script to match.
+* Delay after sample injections: Set FIRST in acquisition script, then set method to match.
+* Number and timing of post-sample reference pulses: Set in acquisition script, then set method to match. The method should NOT cue any post-sample reference pulses, but rather simply wait long enough for the acquisition script to provide them.
 
 ## Hardware
 
